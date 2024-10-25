@@ -1,0 +1,25 @@
+Name  |Price |Sell
+House |2500 |1250
+Car   |1000 |500
+Apple |10   |5
+Banana|15   |7.5
+Orange|20   |10
+Chocolate|25 |12.5
+Milk  |20   |10
+Cheese|35   |17.5
+Coffee|25   |15
+EnergyDrink|30 |12.5
+Meat  |50   |25
+Phone |1000 |500
+Laptop|2000 |1000
+T-Shirt|100 |50
+Pants  |250 |125
+Shoes  |50  |25
+GiftBox|250 |125
+FishingRod| 150 |75
+BookC++|75  |37.5
+ComicBook|60 |30
+Mathematics|45 |22.5
+Encyclopedia|80 |40
+Poems|40  |20
+Dictionary|35  |17.5
