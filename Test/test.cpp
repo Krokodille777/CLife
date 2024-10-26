@@ -568,6 +568,8 @@ int main() {
                 fish(item);
             
         }
+            else if (item == "HuntingRifle") {
+                hunt(item);
         }
         else if (command == "quit") {
             quit();
