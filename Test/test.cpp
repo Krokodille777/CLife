@@ -13,18 +13,47 @@ double health = 100;
 double happiness = 50;
 double experience = 50;
 double luck = 10;
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_int_distribution<> dis(0, 100);
+double probability = dis(gen);
 
 // Inventory and items to buy
 std::vector<std::string> inventory;
-std::vector<std::string> itemsToBuy = {"House", "Car", "Apple", "Banana", "Orange", "Chocolate", "Milk", "Cheese", "Coffee", "EnergyDrink", "Meat", "Phone", "Laptop", "T-Shirt", "Pants", "Shoes", "GiftBox", "FishingRod", "Worm", "CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark", "BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary"};
-std::vector<int> prices = {2500, 1000, 10, 15, 20, 25, 20, 35, 25, 30, 50, 1000, 2000, 100, 250, 50, 250, 75, 35, 60, 120, 180, 240, 300, 75, 60, 45, 80, 40, 35};  // Fixed to match itemsToBuy size
-std::vector<double> earningSell = {1250, 500, 5, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 500, 1000, 50, 125, 25, 125, 37.5, 17.5, 30, 60, 90, 120, 150, 37.5, 30, 22.5, 40, 20, 17.5};  // Fixed to match itemsToBuy size
-std::vector<std::string> itemsToEat = {"Apple", "Banana", "Orange", "Chocolate", "Milk", "Cheese", "Meat", "EnergyDrink", "Coffee"};
-std::vector<std::string> itemsToUse = {"GiftBox", "FishingRod"};
-std::vector<std::string> itemsToRead = {"BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary"};
+std::vector<std::string> itemsToBuy = {
+"House", "Car", 
+"Apple", "Banana", "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Coffee", "EnergyDrink", "Meat", "Pizza",
+ "Phone", "Laptop",
+  "T-Shirt", "Pants", "Shoes", 
+  "GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense",
+  "CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark", 
+  "Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle",
+  "BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas"};
+std::vector<int> prices = {
+    2500, 1000, 
+    10, 15, 30, 15,20, 25, 20, 35, 25, 30, 50, 65,
+    1000, 2000, 
+    100, 250, 50, 
+    250, 75, 20, 350, 150,
+    60, 120, 180, 240, 300, 
+    70, 90, 110, 215, 230, 145, 320, 200, 220, 240, 85, 100, 115,
+    75, 60, 45, 80, 40, 35, 45, 60, 30};  // Fixed to match itemsToBuy size
+std::vector<double> earningSell = {
+    1250, 500, 
+    5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5,
+    500, 1000, 
+    50, 125, 25, 
+    125, 37.5, 10, 175, 75,
+    30, 60, 90, 120, 150, 
+    35, 45, 55, 115, 130, 75, 150, 100, 120, 140, 37.5, 50, 57.5,
+    37.5, 30, 22.5, 40, 20, 17.5, 22.5, 30, 15};  // Fixed to match itemsToBuy size
+std::vector<std::string> itemsToEat = {"Apple", "Banana",  "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Meat", "EnergyDrink", "Coffee", "Pizza"};
+std::vector<std::string> itemsToUse = {"GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense"};
+std::vector<std::string> itemsToRead = {"BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas"};
 std::vector<std::string> itemsToWear = {"T-Shirt", "Pants", "Shoes"};
 std::vector<std::string> Boosters = {"House", "Car"};
 std::vector<std::string> Fish = {"CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark"};
+std::vector<std::string> animalsToHunt = {"Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle"};
 
 // Function to return balance
 double balance() {
@@ -65,6 +94,18 @@ void read(std::string item) {
                     experience += 35;
                     happiness += 20;
                 }
+                else if (item == "Novel") {
+                    experience += 25;
+                    happiness += 20;
+                }
+                else if (item == "CulinaryGuide") {
+                    experience += 40;
+                    happiness += 25;
+                }
+                else if (item == "Atlas") {
+                    experience += 30;
+                    happiness += 30;
+                }
                 std::cout << "You read " << item << ".\n";
                 break;
             }
@@ -92,6 +133,8 @@ void shop() {
             std::cout << " (BS)";
         else if (std::find(Fish.begin(), Fish.end(), itemsToBuy[i]) != Fish.end())
             std::cout << " (SF)";
+        else if (std::find(animalsToHunt.begin(), animalsToHunt.end(), itemsToBuy[i]) != animalsToHunt.end())
+            std::cout << " (AH)";
         std::cout << "\n";
     }
 }
@@ -117,43 +160,62 @@ void GiftBox(std::string item){
                 std::cout << " (BS)";
             else if (std::find(Fish.begin(), Fish.end(), item) != Fish.end())
                 std::cout << " (SF)";
+            else if (std::find(animalsToHunt.begin(), animalsToHunt.end(), item) != animalsToHunt.end())
+                std::cout << " (AH)";
             std::cout << "\n";
             return;
         }
     
     }
-void fish(std::string item){
+void fish(std::string item) {
     if (item == "FishingRod") {
-        
-        std::mt19937 gen(std::random_device{}());
-        std::uniform_int_distribution<std::size_t> dis(0, Fish.size() - 1);
-        std::size_t randomIndex = dis(gen);
-        std::string randomItem = Fish[randomIndex];
-        for (size_t i = 0; i < inventory.size(); ++i) {
-            if ("Worm" == inventory[i] && randomItem == Fish[randomIndex]) {
-                inventory.erase(std::remove (inventory.begin(), inventory.end(), "Worm"), inventory.end());
-                inventory.push_back(randomItem);
-                if (std::find(Fish.begin(), Fish.end(), item) != Fish.end())
-                    std::cout<<" (SF)"; // Sea Food
-                std::cout << "You caught " << randomItem << "!\n";
-                return;
+        // Check if a worm is in the inventory
+        if (std::find(inventory.begin(), inventory.end(), "Worm") != inventory.end()) {
+            // Seed and select random fish
+            std::mt19937 gen(std::random_device{}());
+            std::uniform_int_distribution<std::size_t> dis(0, Fish.size() - 1);
+            std::size_t randomIndex = dis(gen);
+            std::string randomItem = Fish[randomIndex];
+
+            // Remove one "Worm" and add the fish
+            inventory.erase(std::remove(inventory.begin(), inventory.end(), "Worm"), inventory.end());
+            if (probability> 50){
+            inventory.push_back(randomItem);
+            std::cout << "You caught a " << randomItem << "!\n";
             }
-            else if ("Worm" == inventory[i] && randomItem != Fish[randomIndex]) {
-                inventory.erase(std::remove (inventory.begin(), inventory.end(), item), inventory.end());
-                std::cout<<"Unfortunately, you didn't catch anything.\n";
-                return;
+            else{
+                std::cout << "Unfortunately, you didn't catch anything.\n";
             }
-            else if ("Worm" != inventory[i])
-                std::cout<<"You need a worm to fish.\n";
-                return;
-            
+        } else {
+            std::cout << "You need a worm to fish.\n";
         }
-        
-
+    } else {
+        std::cout << "You don't have a fishing rod.\n";
     }
-    std::cout<<"You don't have a fishing rod.\n";
-}  
-
+}
+ void hunt(std::string item) {
+    if (item == "HuntingRifle") {
+        if (std::find(inventory.begin(), inventory.end(), "HuntingLicense") != inventory.end()) {
+            std::mt19937 gen(std::random_device{}());
+            std::uniform_int_distribution<std::size_t> dis(0, animalsToHunt.size() - 1);
+            std::size_t randomIndex = dis(gen);
+            std::string randomItem = animalsToHunt[randomIndex];
+            if (probability> 50){
+            inventory.push_back(randomItem);
+            std::cout << "You caught a " << randomItem << "!\n";
+            }
+            else{
+                std::cout << "Unfortunately, you didn't catch anything.\n";
+            }
+        }
+        else {
+            std::cout << "You need a hunting license to hunt.\n";
+        }
+    } else {
+        std::cout << "You don't have a hunting rifle.\n";
+    }
+ }
+ 
 void buy(std::string item) {
     for (size_t i = 0; i < itemsToBuy.size(); ++i) {
         if (item == itemsToBuy[i]) {
@@ -193,8 +255,14 @@ void eat(std::string item) {
                 isEdible = true;
                 inventory.erase(it);
                 if (item == "Apple") {
+                    health += 5;
+                    energy += 5;
+                } else if (item == "Banana") {
                     health += 10;
                     energy += 5;
+                } else if (item == "Pineapple") {
+                    health += 10;
+                    energy += 10;
                 } else if (item == "Orange") {
                     health += 15;
                     energy += 10;
@@ -204,6 +272,7 @@ void eat(std::string item) {
                 } else if (item == "Milk") {
                     health += 30;
                     energy += 20;
+                    happiness += 5;
                 } else if (item == "Cheese") {
                     health += 35;
                     energy += 25;
@@ -216,6 +285,11 @@ void eat(std::string item) {
                 } else if (item == "Coffee") {
                     health += 25;
                     energy += 45;
+                }
+                else if (item =="Pizza"){
+                    health += 35;
+                    energy += 30;
+                    happiness += 10;
                 }
                 std::cout << "You ate " << item << ".\n";
                 break;
