@@ -343,6 +343,8 @@ void CheckMyInventory() {
                 std::cout << " (BS)";
             else if (std::find(Fish.begin(), Fish.end(), item) != Fish.end())
                 std::cout << " (SF)";
+            else if (std::find(animalsToHunt.begin(), animalsToHunt.end(), item) != animalsToHunt.end())
+                std::cout << " (AH)";
             std::cout << "\n";
         }
     }
