@@ -5,6 +5,7 @@
 #include <thread>
 #include <vector>
 #include <algorithm>
+#include <iomanip>
 
 // Initial money and energy
 double money = 100;
@@ -20,33 +21,9 @@ double probability = dis(gen);
 
 // Inventory and items to buy
 std::vector<std::string> inventory;
-std::vector<std::string> itemsToBuy = {
-"House", "Car", 
-"Apple", "Banana", "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Coffee", "EnergyDrink", "Meat", "Pizza",
- "Phone", "Laptop",
-  "T-Shirt", "Pants", "Shoes", 
-  "GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense",
-  "CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark", 
-  "Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle",
-  "BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas"};
-std::vector<int> prices = {
-    2500, 1000, 
-    10, 15, 30, 15,20, 25, 20, 35, 25, 30, 50, 65,
-    1000, 2000, 
-    100, 250, 50, 
-    250, 75, 20, 350, 150,
-    60, 120, 180, 240, 300, 
-    70, 90, 110, 215, 230, 145, 320, 200, 220, 240, 85, 100, 115,
-    75, 60, 45, 80, 40, 35, 45, 60, 30};  // Fixed to match itemsToBuy size
-std::vector<double> earningSell = {
-    1250, 500, 
-    5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5,
-    500, 1000, 
-    50, 125, 25, 
-    125, 37.5, 10, 175, 75,
-    30, 60, 90, 120, 150, 
-    35, 45, 55, 115, 130, 75, 150, 100, 120, 140, 37.5, 50, 57.5,
-    37.5, 30, 22.5, 40, 20, 17.5, 22.5, 30, 15};  // Fixed to match itemsToBuy size
+std::vector<std::string> itemsToBuy = {"House", "Car", "Apple", "Banana", "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Coffee", "EnergyDrink", "Meat", "Pizza","Phone", "Laptop","T-Shirt", "Pants", "Shoes", "GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense","CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark", "Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle","BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas"};
+std::vector<int> prices = {2500, 1000, 10, 15, 30, 15, 20, 25, 20, 35, 25, 30, 50, 65, 1000, 2000,  100, 250, 50,  250, 75, 20, 350, 150, 60, 120, 180, 240, 300,  70, 90, 110, 215, 230, 145, 320, 200, 220, 240, 85, 100, 115, 75, 60, 45, 80, 40, 35, 45, 60, 30};  // Fixed to match itemsToBuy size
+std::vector<double> earningSell = {1250, 500, 5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5, 500, 1000,  50, 125, 25,  125, 37.5, 10, 175, 75, 30, 60, 90, 120, 150, 35, 45, 55, 115, 130, 75, 150, 100, 120, 140, 37.5, 50, 57.5, 37.5, 30, 22.5, 40, 20, 17.5, 22.5, 30, 15};  // Fixed to match itemsToBuy size
 std::vector<std::string> itemsToEat = {"Apple", "Banana",  "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Meat", "EnergyDrink", "Coffee", "Pizza"};
 std::vector<std::string> itemsToUse = {"GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense"};
 std::vector<std::string> itemsToRead = {"BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas"};
@@ -117,26 +94,45 @@ void read(std::string item) {
 }
 
 void shop() {
-    std::cout << "Here is what you can buy:\n";
-    for (size_t i = 0; i < itemsToBuy.size(); ++i) {
-        std::cout << itemsToBuy[i] << " : $" << prices[i];
-        // Show item category
-        if (std::find(itemsToEat.begin(), itemsToEat.end(), itemsToBuy[i]) != itemsToEat.end())
-            std::cout << " (F)";
-        else if (std::find(itemsToRead.begin(), itemsToRead.end(), itemsToBuy[i]) != itemsToRead.end())
-            std::cout << " (B)";
-        else if (std::find(itemsToUse.begin(), itemsToUse.end(), itemsToBuy[i]) != itemsToUse.end())
-            std::cout << " (U)";
-        else if (std::find(itemsToWear.begin(), itemsToWear.end(), itemsToBuy[i]) != itemsToWear.end())
-            std::cout << " (C)";
-        else if (std::find(Boosters.begin(), Boosters.end(), itemsToBuy[i]) != Boosters.end())
-            std::cout << " (BS)";
-        else if (std::find(Fish.begin(), Fish.end(), itemsToBuy[i]) != Fish.end())
-            std::cout << " (SF)";
-        else if (std::find(animalsToHunt.begin(), animalsToHunt.end(), itemsToBuy[i]) != animalsToHunt.end())
-            std::cout << " (AH)";
-        std::cout << "\n";
+    std::cout << "\n=== AVAILABLE ITEMS ===\n\n";
+    
+    // Get maximum item name length for alignment
+    size_t maxNameLength = 0;
+    for (const auto& item : itemsToBuy) {
+        maxNameLength = std::max(maxNameLength, item.length());
     }
+    
+    // Print header with categories explanation
+    std::cout << "Categories: (F)ood, (B)ooks, (U)sable items, (C)lothes, \n"
+              << "           (BS)Boosters, (SF)Store Fish, (AH)Animals to Hunt\n\n";
+    
+    // Print items in columns with proper alignment
+    for (size_t i = 0; i < itemsToBuy.size(); ++i) {
+        // Item name with padding
+        std::cout << std::left << std::setw(maxNameLength + 2) << itemsToBuy[i];
+        
+        // Price with alignment
+        std::cout << "$ " << std::right << std::setw(5) << prices[i];
+        
+        // Category tag
+        if (std::find(itemsToEat.begin(), itemsToEat.end(), itemsToBuy[i]) != itemsToEat.end())
+            std::cout << "  (F)";
+        else if (std::find(itemsToRead.begin(), itemsToRead.end(), itemsToBuy[i]) != itemsToRead.end())
+            std::cout << "  (B)";
+        else if (std::find(itemsToUse.begin(), itemsToUse.end(), itemsToBuy[i]) != itemsToUse.end())
+            std::cout << "  (U)";
+        else if (std::find(itemsToWear.begin(), itemsToWear.end(), itemsToBuy[i]) != itemsToWear.end())
+            std::cout << "  (C)";
+        else if (std::find(Boosters.begin(), Boosters.end(), itemsToBuy[i]) != Boosters.end())
+            std::cout << "  (BS)";
+        else if (std::find(Fish.begin(), Fish.end(), itemsToBuy[i]) != Fish.end())
+            std::cout << "  (SF)";
+        else if (std::find(animalsToHunt.begin(), animalsToHunt.end(), itemsToBuy[i]) != animalsToHunt.end())
+            std::cout << "  (AH)";
+            
+        std::cout << '\n';
+    }
+    std::cout << "\n===================\n";
 }
 
 void GiftBox(std::string item){
@@ -570,6 +566,7 @@ int main() {
         }
             else if (item == "HuntingRifle") {
                 hunt(item);
+        }
         }
         else if (command == "quit") {
             quit();
