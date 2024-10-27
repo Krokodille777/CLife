@@ -6,6 +6,11 @@
 #include <vector>
 #include <algorithm>
 #include <iomanip>
+// JSON library
+#include <nlohmann/json.hpp>
+#include <fstream>
+
+using json = nlohmann::json;
 
 // Initial money and energy
 double money = 100;
@@ -19,6 +24,9 @@ std::mt19937 gen(rd());
 std::uniform_int_distribution<> dis(0, 100);
 double probability = dis(gen);
 
+// Configuration
+const std::string saveFile = "save.json";
+
 // Inventory and items to buy
 std::vector<std::string> inventory;
 std::vector<std::string> itemsToBuy = {"House", "Car", "Apple", "Banana", "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Coffee", "EnergyDrink", "Meat", "Pizza","Phone", "Laptop","T-Shirt", "Pants", "Shoes", "GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense","CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark", "Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle","BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas"};
@@ -31,6 +39,46 @@ std::vector<std::string> itemsToWear = {"T-Shirt", "Pants", "Shoes"};
 std::vector<std::string> Boosters = {"House", "Car"};
 std::vector<std::string> Fish = {"CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark"};
 std::vector<std::string> animalsToHunt = {"Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle"};
+
+
+// Save and load progress
+
+int saveProgress() {
+    json save;
+    save["money"] = money;
+    save["energy"] = energy;
+    save["health"] = health;
+    save["happiness"] = happiness;
+    save["experience"] = experience;
+    save["inventory"] = inventory;
+    save["luck"] = luck;
+    save["probability"] = probability;
+    std::ofstream file(saveFile);
+    file << save.dump(4);
+    return 0;
+}
+
+int loadProgress() {
+    // This function will load the progress from the save file
+    std::ifstream
+    file(saveFile);
+    if (!file.is_open()) {
+        std::cout << "No save file found.\n";
+        return 1;
+    }
+    json save;
+    file >> save;
+    money = save["money"];
+    energy = save["energy"];
+    health = save["health"];
+    happiness = save["happiness"];
+    experience = save["experience"];
+    inventory = save["inventory"];
+    luck = save["luck"];
+    probability = save["probability"];
+    return 0;
+}
+
 
 // Function to return balance
 double balance() {
@@ -84,6 +132,8 @@ void read(std::string item) {
                     happiness += 30;
                 }
                 std::cout << "You read " << item << ".\n";
+                // save progress
+                saveProgress();
                 break;
             }
         }
@@ -159,6 +209,7 @@ void GiftBox(std::string item){
             else if (std::find(animalsToHunt.begin(), animalsToHunt.end(), item) != animalsToHunt.end())
                 std::cout << " (AH)";
             std::cout << "\n";
+            saveProgress();
             return;
         }
     
@@ -182,6 +233,7 @@ void fish(std::string item) {
             else{
                 std::cout << "Unfortunately, you didn't catch anything.\n";
             }
+            saveProgress();
         } else {
             std::cout << "You need a worm to fish.\n";
         }
@@ -203,6 +255,7 @@ void fish(std::string item) {
             else{
                 std::cout << "Unfortunately, you didn't catch anything.\n";
             }
+            saveProgress();
         }
         else {
             std::cout << "You need a hunting license to hunt.\n";
@@ -219,6 +272,7 @@ void buy(std::string item) {
                 money -= prices[i];
                 inventory.push_back(item);
                 std::cout << "You bought " << item << ".\n";
+                saveProgress();
                 return;
             }
             std::cout << "You cannot afford this item.\n";
@@ -236,6 +290,7 @@ void sell(std::string item) {
             money += earningSell[itemIndex];
             inventory.erase(it);
             std::cout << "You sold " << item << " for $" << earningSell[itemIndex] << ".\n";
+            saveProgress();
         }
     } else {
         std::cout << "You don't have this item in your inventory.\n";
@@ -288,6 +343,7 @@ void eat(std::string item) {
                     happiness += 10;
                 }
                 std::cout << "You ate " << item << ".\n";
+                saveProgress();
                 break;
             }
         }
@@ -419,6 +475,7 @@ double work() {
 double sleep() {
     std::cout << "You have slept and restored your energy.\n";
     energy = 100;
+    saveProgress();
     return energy;
 }
 void Rules(){
@@ -475,6 +532,12 @@ int quit() {
 }
 
 int main() {
+    std::cout << "Welcome to the game!\n";
+    if (loadProgress() == 0) {
+        std::cout << "Progress loaded.\n";
+    } else {
+        std::cout << "New game started.\n";
+    }
     std::string command;
 
     while (command != "quit") {
@@ -500,6 +563,7 @@ int main() {
                 std::this_thread::sleep_for(std::chrono::milliseconds(500));
                 std::cout << "You earned $" << work() << ".\n";
                 std::cout << "Now you have $" << balance() << ".\n";
+                saveProgress();
                 std::cout << "You are tired and can't work anymore today.\n";
             } else {
                 std::cout << "You are too tired to work. Please sleep first.\n";
