@@ -18,11 +18,13 @@ double energy = 100;
 double health = 100;
 double happiness = 50;
 double experience = 50;
-double luck = 10;
+double luck = 1;
 std::random_device rd;
 std::mt19937 gen(rd());
 std::uniform_int_distribution<> dis(0, 100);
 double probability = dis(gen);
+double hunger = 0;
+
 
 // Configuration
 const std::string saveFile = "save.json";
@@ -84,6 +86,23 @@ int loadProgress() {
 double balance() {
     return money;
 }
+double hungerCount(){
+    for (int i = 0; i < 10; i++){
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+        hunger++;
+        if (hunger == 5){
+            std::cout << "You are starving, you need to eat something.\n";
+        }
+        if (hunger == 10){
+            std::cout << "You are so hungry, you need to go to the store.\n";
+            health--;
+            energy--;
+            happiness--;
+        }
+    }
+    return hunger;
+}
+
 
 // Display available items in the shop
 void read(std::string item) {
@@ -308,39 +327,57 @@ void eat(std::string item) {
                 if (item == "Apple") {
                     health += 5;
                     energy += 5;
+                    hunger -= 1;
                 } else if (item == "Banana") {
                     health += 10;
                     energy += 5;
+                    hunger -= 2;
                 } else if (item == "Pineapple") {
                     health += 10;
                     energy += 10;
+                    hunger -= 2;
                 } else if (item == "Orange") {
                     health += 15;
                     energy += 10;
-                } else if (item == "Chocolate") {
+                    hunger -= 2;
+                } else if (item == "Tomato") {
+                    health += 15;
+                    energy += 15;
+                    hunger -= 1;
+                }
+                else if (item == "Chocolate") {
                     health += 20;
                     energy += 30;
+                    happiness += 10;
+                    hunger -= 3;
                 } else if (item == "Milk") {
                     health += 30;
                     energy += 20;
                     happiness += 5;
+                    hunger -= 2;
                 } else if (item == "Cheese") {
                     health += 35;
                     energy += 25;
+                    happiness += 5;
+                    hunger -= 3;
                 } else if (item == "Meat") {
                     health += 50;
                     energy += 40;
+                    hunger -= 5;
                 } else if (item == "EnergyDrink") {
                     health += 10;
                     energy += 60;
+                    hunger -= 1;
                 } else if (item == "Coffee") {
                     health += 25;
                     energy += 45;
+                    hunger -= 1;
                 }
                 else if (item =="Pizza"){
                     health += 35;
                     energy += 30;
                     happiness += 10;
+                    hunger -= 7;
                 }
                 std::cout << "You ate " << item << ".\n";
                 saveProgress();
@@ -495,6 +532,7 @@ void Rules(){
     std::cout << "sleep - to sleep. It will restore your energy\n";
     std::cout << "work - to work. Work is one of the most important commands in this game. It is your main source to gain money. Good work depends on your experince, happiness and energy. If you work once you can't work again because you are so tired. It is really resourceful command. So please be careful. If you want to work again, you can sleep.\n";
     std::cout<< "use - to use an item. You can use it. This games provides you a huge variety of special usable items. Each of them has its own effect and it can be used in different ways.\n";
+    std::cout<<"hunger - checks your hunger level. Hunger is one of the most valuable things in this game. You should always control it. Don't forget to eat food. If hunger reaches the highest level it will affect your health, energy and happiness. Be careful.\n";
     std::cout<<"About Items:\n";
     std::cout<<"Items are the most popular thing you should interact with. This game provides you a big variety of different items. \n You can divide them into some categories: \n 1)Food\n 2)Usable items\n 3)Books\n 4)Boosters\n 5)Clothes\n 6)Tickets\n 7)Pets\n 8) Other";
     std::cout<<"Endings:\n";
@@ -523,6 +561,7 @@ void ListOfCommands(){
     std::cout<<"sleep\n";
     std::cout<<"work\n";
     std::cout<<"use\n";
+    std::cout<<"hunger\n";
 }
 
 // Quit the program
@@ -592,6 +631,9 @@ int main() {
         } 
         else if (command == "health") {
             std::cout << healthCount() << " health.\n";
+        }
+        else if (command == "hunger") {
+            std::cout << hungerCount() << " hunger.\n";
         }
         else if (command == "sleep") {
             sleep();
