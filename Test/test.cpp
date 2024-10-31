@@ -6,6 +6,8 @@
 #include <vector>
 #include <algorithm>
 #include <iomanip>
+#include <atomic>
+#include <mutex>
 // JSON library
 #include <nlohmann/json.hpp>
 #include <fstream>
@@ -23,17 +25,19 @@ std::random_device rd;
 std::mt19937 gen(rd());
 std::uniform_int_distribution<> dis(0, 100);
 double probability = dis(gen);
-double hunger = 0;
-
+std::string item;
+std::string spoiltItem = "Spoilt " + item;
+std::atomic<bool> gameRunning(true);  // Controls the spoilage thread
+std::mutex inventoryMutex; 
 
 // Configuration
 const std::string saveFile = "save.json";
 
 // Inventory and items to buy
 std::vector<std::string> inventory;
-std::vector<std::string> itemsToBuy = {"House", "Car", "Apple", "Banana", "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Coffee", "EnergyDrink", "Meat", "Pizza","Phone", "Laptop","T-Shirt", "Pants", "Shoes", "GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense","CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark", "Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle","BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas"};
-std::vector<int> prices = {2500, 1000, 10, 15, 30, 15, 20, 25, 20, 35, 25, 30, 50, 65, 1000, 2000,  100, 250, 50,  250, 75, 20, 350, 150, 60, 120, 180, 240, 300,  70, 90, 110, 215, 230, 145, 320, 200, 220, 240, 85, 100, 115, 75, 60, 45, 80, 40, 35, 45, 60, 30};  // Fixed to match itemsToBuy size
-std::vector<double> earningSell = {1250, 500, 5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5, 500, 1000,  50, 125, 25,  125, 37.5, 10, 175, 75, 30, 60, 90, 120, 150, 35, 45, 55, 115, 130, 75, 150, 100, 120, 140, 37.5, 50, 57.5, 37.5, 30, 22.5, 40, 20, 17.5, 22.5, 30, 15};  // Fixed to match itemsToBuy size
+std::vector<std::string> itemsToBuy = {"House", "Car", "Apple", "Banana", "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Coffee", "EnergyDrink", "Meat", "Pizza","Phone", "Laptop","T-Shirt", "Pants", "Shoes", "GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense","CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark", "Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle","BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas", "Spoilt_Apple", "Spoilt_Banana", "Spoilt_Pineapple", "Spoilt_Tomato", "Spoilt_Orange", "Spoilt_Chocolate", "Spoilt_Milk", "Spoilt_Cheese", "Spoilt_Meat", "Spoilt_EnergyDrink", "Spoilt_Coffee", "Spoilt_Pizza"};
+std::vector<double> prices = {2500, 1000, 10, 15, 30, 15, 20, 25, 20, 35, 25, 30, 50, 65, 1000, 2000,  100, 250, 50,  250, 75, 20, 350, 150, 60, 120, 180, 240, 300,  70, 90, 110, 215, 230, 145, 320, 200, 220, 240, 85, 100, 115, 75, 60, 45, 80, 40, 35, 45, 60, 30, 5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5};  // Fixed to match itemsToBuy size
+std::vector<double> earningSell = {1250, 500, 5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5, 500, 1000,  50, 125, 25,  125, 37.5, 10, 175, 75, 30, 60, 90, 120, 150, 35, 45, 55, 115, 130, 75, 150, 100, 120, 140, 37.5, 50, 57.5, 37.5, 30, 22.5, 40, 20, 17.5, 22.5, 30, 15, 2.5, 3.75, 7.5, 3.75, 5, 6.25, 5, 8.75, 6.25, 7.5, 12.5, 16.25};  // Fixed to match itemsToBuy size
 std::vector<std::string> itemsToEat = {"Apple", "Banana",  "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Meat", "EnergyDrink", "Coffee", "Pizza"};
 std::vector<std::string> itemsToUse = {"GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense"};
 std::vector<std::string> itemsToRead = {"BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas"};
@@ -41,6 +45,7 @@ std::vector<std::string> itemsToWear = {"T-Shirt", "Pants", "Shoes"};
 std::vector<std::string> Boosters = {"House", "Car"};
 std::vector<std::string> Fish = {"CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark"};
 std::vector<std::string> animalsToHunt = {"Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle"};
+std::vector<std::string> spoiltItems = {"Spoilt_Apple", "Spoilt_Banana", "Spoilt_Pineapple", "Spoilt_Tomato", "Spoilt_Orange", "Spoilt_Chocolate", "Spoilt_Milk", "Spoilt_Cheese", "Spoilt_Meat", "Spoilt_EnergyDrink", "Spoilt_Coffee", "Spoilt_Pizza"};
 
 
 // Save and load progress
@@ -86,22 +91,7 @@ int loadProgress() {
 double balance() {
     return money;
 }
-double hungerCount(){
-    for (int i = 0; i < 10; i++){
-        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-        hunger++;
-        if (hunger == 5){
-            std::cout << "You are starving, you need to eat something.\n";
-        }
-        if (hunger == 10){
-            std::cout << "You are so hungry, you need to go to the store.\n";
-            health--;
-            energy--;
-            happiness--;
-        }
-    }
-    return hunger;
-}
+
 
 
 // Display available items in the shop
@@ -173,7 +163,7 @@ void shop() {
     
     // Print header with categories explanation
     std::cout << "Categories: (F)ood, (B)ooks, (U)sable items, (C)lothes, \n"
-              << "           (BS)Boosters, (SF)Store Fish, (AH)Animals to Hunt\n\n";
+              << "           (BS)Boosters, (SF)Store Fish, (AH)Animals to Hunt, (Fs)Spoilt Items\n\n";
     
     // Print items in columns with proper alignment
     for (size_t i = 0; i < itemsToBuy.size(); ++i) {
@@ -198,6 +188,10 @@ void shop() {
             std::cout << "  (SF)";
         else if (std::find(animalsToHunt.begin(), animalsToHunt.end(), itemsToBuy[i]) != animalsToHunt.end())
             std::cout << "  (AH)";
+        else if (std::find(spoiltItems.begin(), spoiltItems.end(), itemsToBuy[i]) != spoiltItems.end())
+            std::cout << "  (Fs)";
+        else
+            std::cout << "  (O)"; // Other
             
         std::cout << '\n';
     }
@@ -227,6 +221,8 @@ void GiftBox(std::string item){
                 std::cout << " (SF)";
             else if (std::find(animalsToHunt.begin(), animalsToHunt.end(), item) != animalsToHunt.end())
                 std::cout << " (AH)";
+            else if(std::find(spoiltItems.begin(), spoiltItems.end(), item) != spoiltItems.end())
+                std::cout << " (Fs)"; // Food spoilt
             std::cout << "\n";
             saveProgress();
             return;
@@ -285,6 +281,7 @@ void fish(std::string item) {
  }
  
 void buy(std::string item) {
+    
     for (size_t i = 0; i < itemsToBuy.size(); ++i) {
         if (item == itemsToBuy[i]) {
             if (money >= prices[i]) {
@@ -299,6 +296,55 @@ void buy(std::string item) {
         }
     }
     std::cout << "Item not found in shop.\n";
+}
+void spoil(std::string item) {
+    std::lock_guard<std::mutex> lock(inventoryMutex);  // Lock the inventory
+    
+    auto it = std::find(inventory.begin(), inventory.end(), item);
+    
+    if (it == inventory.end()) {
+        return;
+    }
+    
+    bool isFood = std::find(itemsToEat.begin(), itemsToEat.end(), item) != itemsToEat.end();
+    if (!isFood) {
+        return;
+    }
+    
+    std::string spoiltItem = "Spoilt_" + item;
+    
+    if (std::find(spoiltItems.begin(), spoiltItems.end(), spoiltItem) != spoiltItems.end()) {
+        inventory.erase(it);
+        inventory.push_back(spoiltItem);
+        std::cout << "\nYour " << item << " has spoiled.\n";
+        saveProgress();
+    }
+}
+
+// Function that runs in the background thread
+void spoilageThread() {
+    
+    while (gameRunning) {
+        
+        std::this_thread::sleep_for(std::chrono::seconds(420));
+        
+        // Create a copy of inventory to check
+        std::vector<std::string> itemsToCheck;
+        {
+            std::lock_guard<std::mutex> lock(inventoryMutex);
+            itemsToCheck = inventory;
+        }
+        
+        // Find food items that could spoil
+        for (const auto& item : itemsToCheck) {
+            if (std::find(itemsToEat.begin(), itemsToEat.end(), item) != itemsToEat.end()) {
+                // 20% chance to spoil each food item
+                
+                    spoil(item);
+                
+            }
+        }
+    }
 }
 
 void sell(std::string item) {
@@ -327,58 +373,107 @@ void eat(std::string item) {
                 if (item == "Apple") {
                     health += 5;
                     energy += 5;
-                    hunger -= 1;
+                } else if (item == "Spoilt_Apple") {
+                    health -= 5;
+                    energy -= 5;
+                    happiness -= 2;
                 } else if (item == "Banana") {
                     health += 10;
                     energy += 5;
-                    hunger -= 2;
-                } else if (item == "Pineapple") {
+                } else if (item == "Spoilt_Banana") {
+                    health -= 7;
+                    energy -= 5;
+                    happiness -= 4;
+                }
+                else if (item == "Pineapple") {
                     health += 10;
                     energy += 10;
-                    hunger -= 2;
-                } else if (item == "Orange") {
+                } else if (item == "Spoilt_Pineapple") {
+                    health -= 10;
+                    energy -= 10;
+                    happiness -= 5;
+                }
+                 else if (item == "Orange") {
                     health += 15;
                     energy += 10;
-                    hunger -= 2;
-                } else if (item == "Tomato") {
+                } else if (item == "Spoilt_Orange") {
+                    health -= 7;
+                    energy -= 5;
+                    happiness -= 3;
+                }
+                else if (item == "Tomato") {
                     health += 15;
                     energy += 15;
-                    hunger -= 1;
+                }
+                else if (item == "Spoilt_Tomato") {
+                    health -= 10;
+                    energy -= 10;
+                    happiness -= 4;
                 }
                 else if (item == "Chocolate") {
                     health += 20;
                     energy += 30;
-                    happiness += 10;
-                    hunger -= 3;
-                } else if (item == "Milk") {
+                } else if (item == "Spoilt_Chocolate") {
+                    health -= 10;
+                    energy -= 12;
+                    happiness -= 7;
+                } 
+                else if (item == "Milk") {
                     health += 30;
                     energy += 20;
                     happiness += 5;
-                    hunger -= 2;
-                } else if (item == "Cheese") {
+                } 
+                else if (item == "Spoilt_Milk") {
+                    health -= 12;
+                    energy -= 10;
+                    happiness -= 5;
+                }
+                else if (item == "Cheese") {
                     health += 35;
                     energy += 25;
-                    happiness += 5;
-                    hunger -= 3;
-                } else if (item == "Meat") {
+                } 
+                else if (item == "Spoilt_Cheese") {
+                    health -= 10;
+                    energy -= 13;
+                    happiness -= 7;
+                } 
+                else if (item == "Meat") {
                     health += 50;
-                    energy += 40;
-                    hunger -= 5;
+                    energy += 40;}
+                else if (item == "Spoilt_Meat") {
+                    health -= 20;
+                    energy -= 20;
+                    happiness -= 10;
+                
                 } else if (item == "EnergyDrink") {
                     health += 10;
                     energy += 60;
-                    hunger -= 1;
-                } else if (item == "Coffee") {
+                }  
+                else if (item == "Spoilt_EnergyDrink") {
+                    health -= 45;
+                    energy -= 60;
+                    happiness -= 25;
+                }
+                else if (item == "Coffee") {
                     health += 25;
                     energy += 45;
-                    hunger -= 1;
+                }
+                else if (item == "Spoilt_Coffee") {
+                    health -= 30;
+                    energy -= 45;
+                    happiness -= 40;
                 }
                 else if (item =="Pizza"){
                     health += 35;
                     energy += 30;
                     happiness += 10;
-                    hunger -= 7;
                 }
+                else if (item == "Spoilt_Pizza"){
+                    health -= 30;
+                    energy -= 30;
+                    happiness -= 60;
+                }
+                
                 std::cout << "You ate " << item << ".\n";
                 saveProgress();
                 break;
@@ -391,6 +486,10 @@ void eat(std::string item) {
         std::cout << "You don't have " << item << " in your inventory.\n";
     }
 }
+ void clearInventory() {
+    inventory.clear();
+    std::cout << "Inventory cleared.\n";
+ }
 
 double energyCount() {
     if (energy > 100) energy = 100;
@@ -414,6 +513,7 @@ double energyCount() {
 
 
 void CheckMyInventory() {
+    std::lock_guard<std::mutex> lock(inventoryMutex);
     if (inventory.empty()) {
         std::cout << "Your inventory is empty.\n";
     } else {
@@ -434,9 +534,16 @@ void CheckMyInventory() {
                 std::cout << " (SF)";
             else if (std::find(animalsToHunt.begin(), animalsToHunt.end(), item) != animalsToHunt.end())
                 std::cout << " (AH)";
+            else if(std::find(spoiltItems.begin(), spoiltItems.end(), item) != spoiltItems.end())
+                std::cout << " (Fs)";
             std::cout << "\n";
         }
     }
+}
+void Trash(std::string item) {
+    inventory.erase(std::remove(inventory.begin(), inventory.end(), item), inventory.end());
+    saveProgress();
+
 }
 double healthCount() {
     if (health> 100) health = 100;
@@ -532,7 +639,7 @@ void Rules(){
     std::cout << "sleep - to sleep. It will restore your energy\n";
     std::cout << "work - to work. Work is one of the most important commands in this game. It is your main source to gain money. Good work depends on your experince, happiness and energy. If you work once you can't work again because you are so tired. It is really resourceful command. So please be careful. If you want to work again, you can sleep.\n";
     std::cout<< "use - to use an item. You can use it. This games provides you a huge variety of special usable items. Each of them has its own effect and it can be used in different ways.\n";
-    std::cout<<"hunger - checks your hunger level. Hunger is one of the most valuable things in this game. You should always control it. Don't forget to eat food. If hunger reaches the highest level it will affect your health, energy and happiness. Be careful.\n";
+    std::cout<<"trash - to remove an item from your inventory. For example, you have some spoiled food or unnecessary items. You can remove them from your inventory. But remember, you can't get them back.\n";
     std::cout<<"About Items:\n";
     std::cout<<"Items are the most popular thing you should interact with. This game provides you a big variety of different items. \n You can divide them into some categories: \n 1)Food\n 2)Usable items\n 3)Books\n 4)Boosters\n 5)Clothes\n 6)Tickets\n 7)Pets\n 8) Other";
     std::cout<<"Endings:\n";
@@ -561,7 +668,9 @@ void ListOfCommands(){
     std::cout<<"sleep\n";
     std::cout<<"work\n";
     std::cout<<"use\n";
-    std::cout<<"hunger\n";
+    std::cout<<"trash\n";
+    std::cout<<"all_commands\n";
+    std::cout<<"help\n";
 }
 
 // Quit the program
@@ -577,8 +686,10 @@ int main() {
     } else {
         std::cout << "New game started.\n";
     }
+    std::thread spoiler(spoilageThread);
     std::string command;
 
+    
     while (command != "quit") {
         std::cout << "Enter command (use help or all_commands): ";
         std::cin >> command;
@@ -632,17 +743,21 @@ int main() {
         else if (command == "health") {
             std::cout << healthCount() << " health.\n";
         }
-        else if (command == "hunger") {
-            std::cout << hungerCount() << " hunger.\n";
-        }
         else if (command == "sleep") {
             sleep();
         } 
+        else if (command == "destroy") {
+            clearInventory();
+        }
         else if (command == "buy") {
             std::string item;
-            std::cout<<"What do you want to buy? \n";
+            std::cout << "What do you want to buy? \n";
             std::cin >> item;
-            buy(item);
+            {
+                std::lock_guard<std::mutex> lock(inventoryMutex);
+                buy(item);
+            }
+        
         } 
         else if (command == "energy") {
             std::cout << "You have " << energyCount() << " energy.\n";
@@ -658,6 +773,12 @@ int main() {
             std::cout<<"What do you want to sell? \n";
             std::cin >> item;
             sell(item);
+        }
+        else if (command == "trash") {
+            std::string item;
+            std::cout<<"What do you want to trash? \n";
+            std::cin >> item;
+            Trash(item);
         }
         else if (command == "use") {
             std::string item;
@@ -681,6 +802,7 @@ int main() {
             std::cout << "Unknown command.\n";
         }
     }
-
+    gameRunning = false;
+    spoiler.join();
     return 0;
 }
