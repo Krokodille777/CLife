@@ -35,11 +35,11 @@ const std::string saveFile = "save.json";
 
 // Inventory and items to buy
 std::vector<std::string> inventory;
-std::vector<std::string> itemsToBuy = {"House", "Car", "Apple", "Banana", "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Coffee", "EnergyDrink", "Meat", "Pizza","Phone", "Laptop","T-Shirt", "Pants", "Shoes", "GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense", "Drill","CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark", "Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle", "Iron", "Copper", "Gold", "Silver", "Mercury", "Titanium", "Aluminum", "Sand", "Cobblestone", "Clay", "Coal", "BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas", "Spoilt_Apple", "Spoilt_Banana", "Spoilt_Pineapple", "Spoilt_Tomato", "Spoilt_Orange", "Spoilt_Chocolate", "Spoilt_Milk", "Spoilt_Cheese", "Spoilt_Meat", "Spoilt_EnergyDrink", "Spoilt_Coffee", "Spoilt_Pizza"};
-std::vector<double> prices = {2500, 1000, 10, 15, 30, 15, 20, 25, 20, 35, 25, 30, 50, 65, 1000, 2000,  100, 250, 50,  250, 75, 20, 350, 150, 450, 60, 120, 180, 240, 300,  70, 90, 110, 215, 230, 145, 320, 200, 220, 240, 85, 100, 115, 50, 35, 215, 180, 165, 240, 100, 25, 60, 30, 50, 75, 60, 45, 80, 40, 35, 45, 60, 30, 5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5};  // Fixed to match itemsToBuy size
-std::vector<double> earningSell = {1250, 500, 5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5, 500, 1000,  50, 125, 25,  125, 37.5, 10, 175, 75, 30, 60, 90, 120, 150, 35, 45, 55, 115, 130, 75, 150, 100, 120, 140, 37.5, 50, 57.5, 25, 17.5, 107.5, 90, 82.5, 120, 100, 12.5, 30, 15, 25,  37.5, 30, 22.5, 40, 20, 17.5, 22.5, 30, 15, 2.5, 3.75, 7.5, 3.75, 5, 6.25, 5, 8.75, 6.25, 7.5, 12.5, 16.25};  // Fixed to match itemsToBuy size
+std::vector<std::string> itemsToBuy = {"House", "Car", "Apple", "Banana", "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Coffee", "EnergyDrink", "Meat", "Pizza","Phone", "Laptop", "Crown", "Trophy", "Ring", "T-Shirt", "Pants", "Shoes", "GiftBox", "MysteryBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense", "Drill","CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark", "Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle", "Iron", "Copper", "Gold", "Silver", "Diamond", "Mercury", "Titanium", "Aluminum", "Sand", "Cobblestone", "Clay", "Coal", "BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas", "Spoilt_Apple", "Spoilt_Banana", "Spoilt_Pineapple", "Spoilt_Tomato", "Spoilt_Orange", "Spoilt_Chocolate", "Spoilt_Milk", "Spoilt_Cheese", "Spoilt_Meat", "Spoilt_EnergyDrink", "Spoilt_Coffee", "Spoilt_Pizza"};
+std::vector<double> prices = {2500, 1000, 10, 15, 30, 15, 20, 25, 20, 35, 25, 30, 50, 65, 1000, 2000, 5000, 3000, 1500, 100, 250, 50,  250, 150, 75, 20, 350, 150, 450, 60, 120, 180, 240, 300,  70, 90, 110, 215, 230, 145, 320, 200, 220, 240, 85, 100, 115, 50, 35, 215, 7500, 180, 165, 240, 100, 25, 60, 30, 50, 75, 60, 45, 80, 40, 35, 45, 60, 30, 5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5};  // Fixed to match itemsToBuy size
+std::vector<double> earningSell = {1250, 500, 5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5, 500, 1000, 2500, 1500, 750, 50, 125, 25,  125, 75, 37.5, 10, 175, 75, 30, 60, 90, 120, 150, 35, 45, 55, 115, 130, 75, 150, 100, 120, 140, 37.5, 50, 57.5, 25, 17.5, 107.5, 3750, 90, 82.5, 120, 100, 12.5, 30, 15, 25,  37.5, 30, 22.5, 40, 20, 17.5, 22.5, 30, 15, 2.5, 3.75, 7.5, 3.75, 5, 6.25, 5, 8.75, 6.25, 7.5, 12.5, 16.25};  // Fixed to match itemsToBuy size
 std::vector<std::string> itemsToEat = {"Apple", "Banana",  "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Meat", "EnergyDrink", "Coffee", "Pizza"};
-std::vector<std::string> itemsToUse = {"GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense", "Drill"};
+std::vector<std::string> itemsToUse = {"GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense", "Drill", "MysteryBox"};
 std::vector<std::string> itemsToRead = {"BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas"};
 std::vector<std::string> itemsToWear = {"T-Shirt", "Pants", "Shoes"};
 std::vector<std::string> Boosters = {"House", "Car"};
@@ -47,6 +47,7 @@ std::vector<std::string> Fish = {"CommonFish", "RareFish", "BigFish", "Legendary
 std::vector<std::string> animalsToHunt = {"Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle"};
 std::vector<std::string> spoiltItems = {"Spoilt_Apple", "Spoilt_Banana", "Spoilt_Pineapple", "Spoilt_Tomato", "Spoilt_Orange", "Spoilt_Chocolate", "Spoilt_Milk", "Spoilt_Cheese", "Spoilt_Meat", "Spoilt_EnergyDrink", "Spoilt_Coffee", "Spoilt_Pizza"};
 std::vector<std::string>MiningStones = {"Iron", "Copper", "Gold", "Silver", "Mercury", "Titanium", "Aluminium", "Sand", "CobbleStone", "Clay", "Coal"};
+std::vector<std::string> Treasure = {"Crown", "Trophy", "Ring", "Diamond"};
 
 // Save and load progress
 
@@ -303,6 +304,118 @@ void mine(std::string item){
         saveProgress();
     }
 } 
+
+void MysteryBox(std::string item){
+    if (item == "MysteryBox"){
+        inventory.erase(std::remove(inventory.begin(), inventory.end(), item), inventory.end());
+        std::mt19937 gen(std::random_device{}());
+        std::uniform_int_distribution<std::size_t> dis(1, 14);
+        int randomNimber = dis(gen);
+        if (randomNimber == 1){
+            std::cout<<"You have found a chest with money! Lucky you!\n";
+            std::mt19937 gen(std::random_device{}());
+            std::uniform_int_distribution<std::size_t> dis(25, 225);
+            int randomNimber = dis(gen);
+            money += randomNimber;
+            luck += 0.2;
+            saveProgress();
+        }
+        else if (randomNimber == 2){
+            std::cout<<"You found a magic magnifying glass that doubled your money!\n";
+            money *= 2;
+            luck += 0.5;
+            saveProgress();
+        }
+        else if (randomNimber == 3){
+            std::mt19937 gen(std::random_device{}());
+            std::uniform_int_distribution<std::size_t> dis(1, Treasure.size() - 1);
+            std::size_t randomIndex = dis(gen);
+            std::string randomItem = Treasure[randomIndex];
+            inventory.push_back(randomItem);
+            std::cout << "You found a " << randomItem << "!\n";
+            luck += 0.3;
+            saveProgress();
+        }
+        else if (randomNimber == 4){
+            std::cout<<"You found another mystery box in this box!\n";
+            inventory.push_back("MysteryBox");
+            luck += 0.1;
+            saveProgress();
+        }
+        else if (randomNimber == 5){
+            std::cout<<"There was nothing in this box! Well, at least you didn't lose anything.\n";
+        }
+        else if (randomNimber == 6){
+            std::cout<<"There was a water bomb that made you lose some money!\n";
+            std::mt19937 gen(std::random_device{}());
+            std::uniform_int_distribution<std::size_t> dis(1, 5);
+            int randomNimber = dis(gen);
+            money -= randomNimber;
+            luck -= 0.2;
+            saveProgress();
+        }
+        else if (randomNimber == 7){
+            std::cout<<"There was a thief who stole half of your money!\n";
+            money /= 2;
+            luck -= 0.7;
+            saveProgress();
+        }
+        else if (randomNimber == 8){
+            std::cout<<"There was a fire ball that destroyed some of your items!\n";
+            std::mt19937 gen(std::random_device{}());
+            std::uniform_int_distribution<std::size_t> dis(1, 5);
+            int randomNimber = dis(gen);
+            inventory.erase(inventory.begin() + randomNimber);
+            luck -= 0.3;
+            saveProgress();
+        }
+        else if (randomNimber == 9){
+            std::cout<<"There was a potion that made you lose some your stats!\n";
+            std::mt19937 gen(std::random_device{}());
+            std::uniform_int_distribution<std::size_t> dis(20, 30);
+            int healthLoss = dis(gen);
+            std::uniform_int_distribution<std::size_t> dis2(20, 50);
+            int energyLoss = dis2(gen);
+            std::uniform_int_distribution<std::size_t> dis3(15, 50);
+            int happinessLoss = dis3(gen);
+            health -= healthLoss;
+            energy -= energyLoss;
+            happiness -= happinessLoss;
+            luck -= 0.5;
+            saveProgress();
+        }
+        else if (randomNimber == 10){
+            std::cout<<"There was a healing potion that healed you!\n";
+            std::mt19937 gen(std::random_device{}());
+            std::uniform_int_distribution<std::size_t> dis(20, 30);
+            int healthGain = dis(gen);
+            health += healthGain;
+            luck += 0.3;
+            saveProgress();
+        }
+        else if (randomNimber == 11){
+            std::cout<<"There was an elixir that increases your intelligence!\n";
+            std::mt19937 gen(std::random_device{}());
+            std::uniform_int_distribution<std::size_t> dis(5, 45);
+            int randomNimber = dis(gen);
+            experience += randomNimber;
+            luck += 0.3;
+            saveProgress();
+        }
+        else if (randomNimber == 12){
+            std::cout<<"There was a magic fruit that restored your energy!\n";
+            std::mt19937 gen(std::random_device{}());
+            std::uniform_int_distribution<std::size_t> dis(5, 45);
+            int randomNimber = dis(gen);
+            energy += randomNimber;
+            luck += 0.3;
+            saveProgress();
+        }
+    }
+    else{
+        std::cout<<"You don't have a mystery box.\n";
+    }
+}
 void buy(std::string item) {
     
     for (size_t i = 0; i < itemsToBuy.size(); ++i) {
@@ -821,6 +934,9 @@ int main() {
         }
             else if (item == "Drill") {
                 mine(item);
+        }
+            else if (item == "MysteryBox") {
+                MysteryBox(item);
         }
         }
         else if (command == "quit") {
