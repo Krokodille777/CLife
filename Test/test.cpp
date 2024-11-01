@@ -35,18 +35,18 @@ const std::string saveFile = "save.json";
 
 // Inventory and items to buy
 std::vector<std::string> inventory;
-std::vector<std::string> itemsToBuy = {"House", "Car", "Apple", "Banana", "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Coffee", "EnergyDrink", "Meat", "Pizza","Phone", "Laptop","T-Shirt", "Pants", "Shoes", "GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense","CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark", "Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle","BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas", "Spoilt_Apple", "Spoilt_Banana", "Spoilt_Pineapple", "Spoilt_Tomato", "Spoilt_Orange", "Spoilt_Chocolate", "Spoilt_Milk", "Spoilt_Cheese", "Spoilt_Meat", "Spoilt_EnergyDrink", "Spoilt_Coffee", "Spoilt_Pizza"};
-std::vector<double> prices = {2500, 1000, 10, 15, 30, 15, 20, 25, 20, 35, 25, 30, 50, 65, 1000, 2000,  100, 250, 50,  250, 75, 20, 350, 150, 60, 120, 180, 240, 300,  70, 90, 110, 215, 230, 145, 320, 200, 220, 240, 85, 100, 115, 75, 60, 45, 80, 40, 35, 45, 60, 30, 5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5};  // Fixed to match itemsToBuy size
-std::vector<double> earningSell = {1250, 500, 5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5, 500, 1000,  50, 125, 25,  125, 37.5, 10, 175, 75, 30, 60, 90, 120, 150, 35, 45, 55, 115, 130, 75, 150, 100, 120, 140, 37.5, 50, 57.5, 37.5, 30, 22.5, 40, 20, 17.5, 22.5, 30, 15, 2.5, 3.75, 7.5, 3.75, 5, 6.25, 5, 8.75, 6.25, 7.5, 12.5, 16.25};  // Fixed to match itemsToBuy size
+std::vector<std::string> itemsToBuy = {"House", "Car", "Apple", "Banana", "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Coffee", "EnergyDrink", "Meat", "Pizza","Phone", "Laptop","T-Shirt", "Pants", "Shoes", "GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense", "Drill","CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark", "Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle", "Iron", "Copper", "Gold", "Silver", "Mercury", "Titanium", "Aluminum", "Sand", "Cobblestone", "Clay", "Coal", "BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas", "Spoilt_Apple", "Spoilt_Banana", "Spoilt_Pineapple", "Spoilt_Tomato", "Spoilt_Orange", "Spoilt_Chocolate", "Spoilt_Milk", "Spoilt_Cheese", "Spoilt_Meat", "Spoilt_EnergyDrink", "Spoilt_Coffee", "Spoilt_Pizza"};
+std::vector<double> prices = {2500, 1000, 10, 15, 30, 15, 20, 25, 20, 35, 25, 30, 50, 65, 1000, 2000,  100, 250, 50,  250, 75, 20, 350, 150, 450, 60, 120, 180, 240, 300,  70, 90, 110, 215, 230, 145, 320, 200, 220, 240, 85, 100, 115, 50, 35, 215, 180, 165, 240, 100, 25, 60, 30, 50, 75, 60, 45, 80, 40, 35, 45, 60, 30, 5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5};  // Fixed to match itemsToBuy size
+std::vector<double> earningSell = {1250, 500, 5, 7.5, 15, 7.5, 10, 12.5, 10, 17.5, 12.5, 15, 25, 32.5, 500, 1000,  50, 125, 25,  125, 37.5, 10, 175, 75, 30, 60, 90, 120, 150, 35, 45, 55, 115, 130, 75, 150, 100, 120, 140, 37.5, 50, 57.5, 25, 17.5, 107.5, 90, 82.5, 120, 100, 12.5, 30, 15, 25,  37.5, 30, 22.5, 40, 20, 17.5, 22.5, 30, 15, 2.5, 3.75, 7.5, 3.75, 5, 6.25, 5, 8.75, 6.25, 7.5, 12.5, 16.25};  // Fixed to match itemsToBuy size
 std::vector<std::string> itemsToEat = {"Apple", "Banana",  "Pineapple", "Tomato", "Orange", "Chocolate", "Milk", "Cheese", "Meat", "EnergyDrink", "Coffee", "Pizza"};
-std::vector<std::string> itemsToUse = {"GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense"};
+std::vector<std::string> itemsToUse = {"GiftBox", "FishingRod", "Worm", "HuntingRifle", "HuntingLicense", "Drill"};
 std::vector<std::string> itemsToRead = {"BookC++", "ComicBook", "Mathematics", "Encyclopedia", "Poems", "Dictionary", "Novel", "CulinaryGuide", "Atlas"};
 std::vector<std::string> itemsToWear = {"T-Shirt", "Pants", "Shoes"};
 std::vector<std::string> Boosters = {"House", "Car"};
 std::vector<std::string> Fish = {"CommonFish", "RareFish", "BigFish", "LegendaryFish", "Shark"};
 std::vector<std::string> animalsToHunt = {"Rabbit", "Fox", "Wolf", "Bear", "Hippo", "Deer", "Elephant", "Zebra", "Lion", "Tiger", "Raccoon", "Turtle", "Eagle"};
 std::vector<std::string> spoiltItems = {"Spoilt_Apple", "Spoilt_Banana", "Spoilt_Pineapple", "Spoilt_Tomato", "Spoilt_Orange", "Spoilt_Chocolate", "Spoilt_Milk", "Spoilt_Cheese", "Spoilt_Meat", "Spoilt_EnergyDrink", "Spoilt_Coffee", "Spoilt_Pizza"};
-
+std::vector<std::string>MiningStones = {"Iron", "Copper", "Gold", "Silver", "Mercury", "Titanium", "Aluminium", "Sand", "CobbleStone", "Clay", "Coal"};
 
 // Save and load progress
 
@@ -280,6 +280,29 @@ void fish(std::string item) {
     }
  }
  
+void mine(std::string item){
+    if (item == "Drill"){
+        std::mt19937 gen(std::random_device{}());
+        std::uniform_int_distribution<std::size_t> dis(0, MiningStones.size() - 1);
+        std::size_t randomIndex = dis(gen);
+        std::string randomItem = MiningStones[randomIndex];
+        if (energy > 20){
+            if (probability> 50){
+        inventory.push_back(randomItem);
+        std::cout << "You mined a " << randomItem << "!\n";
+        }
+        else{
+            std::cout << "Unfortunately, you didn't mine anything.\n";
+        }
+        energy -= 10;
+        }
+        else if (energy < 20){
+            std::cout << "You don't have enough energy to mine anything.\n";
+        }
+        
+        saveProgress();
+    }
+} 
 void buy(std::string item) {
     
     for (size_t i = 0; i < itemsToBuy.size(); ++i) {
@@ -536,6 +559,8 @@ void CheckMyInventory() {
                 std::cout << " (AH)";
             else if(std::find(spoiltItems.begin(), spoiltItems.end(), item) != spoiltItems.end())
                 std::cout << " (Fs)";
+            else if(std::find(MiningStones.begin(), MiningStones.end(), item) != MiningStones.end())
+                std::cout << " (M)"; // Mining stone
             std::cout << "\n";
         }
     }
@@ -675,7 +700,7 @@ void ListOfCommands(){
 
 // Quit the program
 int quit() {
-    std::cout << "Bye!\n";
+    std::cout << "Goodbye!\n";
     return 0;
 }
 
@@ -794,15 +819,21 @@ int main() {
             else if (item == "HuntingRifle") {
                 hunt(item);
         }
+            else if (item == "Drill") {
+                mine(item);
+        }
         }
         else if (command == "quit") {
             quit();
+
+            
+            
         } 
         else {
             std::cout << "Unknown command.\n";
         }
-    }
-    gameRunning = false;
-    spoiler.join();
+        }
+    
     return 0;
+
 }
