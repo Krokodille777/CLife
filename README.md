@@ -43,10 +43,10 @@ Use the help command in the game for tips, or shop to see what’s available. Ea
 Important: Endings in CLife
 Your game ends if one of the following conditions is met:
 
-Energy = 0: Character dies from exhaustion.
-Experience = 0: Character dies from boredom.
-Health = 0: Character dies from disease.
-Happiness = 0: Character dies from sadness.
+  1.  Energy = 0: Character dies from exhaustion.
+  2.  Experience = 0: Character dies from boredom.
+  3.  Health = 0: Character dies from disease.
+  4.  Happiness = 0: Character dies from sadness.
 
 ====================================================================================================
 
