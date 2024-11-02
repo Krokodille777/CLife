@@ -191,6 +191,10 @@ void shop() {
             std::cout << "  (AH)";
         else if (std::find(spoiltItems.begin(), spoiltItems.end(), itemsToBuy[i]) != spoiltItems.end())
             std::cout << "  (Fs)";
+        else if (std::find(MiningStones.begin(), MiningStones.end(), itemsToBuy[i]) != MiningStones.end())
+            std::cout << "  (Ms)";
+        else if (std::find(Treasure.begin(), Treasure.end(), itemsToBuy[i]) != Treasure.end())
+            std::cout << "  (T)";
         else
             std::cout << "  (O)"; // Other
             
@@ -224,6 +228,8 @@ void GiftBox(std::string item){
                 std::cout << " (AH)";
             else if(std::find(spoiltItems.begin(), spoiltItems.end(), item) != spoiltItems.end())
                 std::cout << " (Fs)"; // Food spoilt
+            else if(std::find(MiningStones.begin(), MiningStones.end(), item) != MiningStones.end())
+                std::cout << " (Ms)"; // Mining Stone
             std::cout << "\n";
             saveProgress();
             return;
@@ -673,7 +679,12 @@ void CheckMyInventory() {
             else if(std::find(spoiltItems.begin(), spoiltItems.end(), item) != spoiltItems.end())
                 std::cout << " (Fs)";
             else if(std::find(MiningStones.begin(), MiningStones.end(), item) != MiningStones.end())
-                std::cout << " (M)"; // Mining stone
+                std::cout << " (Ms)"; // Mining stone
+            else if (std::find(Treasure.begin(), Treasure.end(), item) != Treasure.end())
+                std::cout << " (T)";
+            else {
+                std::cout << " (O)"; // Other
+            }
             std::cout << "\n";
         }
     }
