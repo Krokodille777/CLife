@@ -26,14 +26,15 @@ Here are some of the main commands to guide your CLife experience:
  15. all_commands: List every available command.
 
 ====================================================================================================
+
 Quick Start Guide
+
 Compile:
 
 g++ test.cpp
 Run:
 
-bash
-Копировать код
+
 ./a.out
 Use the help command in the game for tips, or shop to see what’s available. Each item in the shop has unique effects, and choices you make directly influence your character’s well-being.
 
