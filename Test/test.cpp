@@ -827,6 +827,18 @@ int quit() {
     std::cout << "Goodbye!\n";
     return 0;
 }
+void new_game() {
+    std::cout << "New game started.\n";
+    inventory.clear();
+    money = 100;
+    energy = 100;
+     health = 100;
+     happiness = 50;
+     experience = 50;
+     luck = 1;
+    gameRunning = true;
+    saveProgress();
+}
 
 int main() {
     std::cout << "Welcome to the game!\n";
@@ -928,6 +940,19 @@ int main() {
             std::cout<<"What do you want to trash? \n";
             std::cin >> item;
             Trash(item);
+        }
+        else if (command == "new_game") {
+         std::cout<<"Are you sure you want to start a new game? \n";
+         std::string answer;
+         std::cin >> answer;
+         if (answer == "yes" || answer == "Yes" || answer == "YES" || answer == "y" || answer == "Y") {
+            new_game();
+            std::cout<<"Welcome to the game.\n";
+         }
+         else if (answer == "no" || answer == "No" || answer == "NO" || answer == "n" || answer == "N") {
+            std::cout<<"Ok, no new game started.\n";
+         }
+            
         }
         else if (command == "use") {
             std::string item;
